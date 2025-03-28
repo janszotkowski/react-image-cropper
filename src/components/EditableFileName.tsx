@@ -75,7 +75,8 @@ export const EditableFileName: React.FC<EditableFileNameProps> = ({ fileName, on
             ) : (
                 <div
                     onClick={handleEditStart}
-                    className={'border-b border-transparent hover:border-white/30 text-sm text-center px-2 py-1 cursor-text transition-colors max-w-[400px]'}
+                    className={'border-b border-transparent hover:border-white/30 text-sm text-center px-2 py-1 cursor-text transition-colors max-w-[400px] truncate overflow-hidden'}
+                    title={fileName}
                 >
                     {fileName}
                 </div>
