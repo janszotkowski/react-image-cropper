@@ -115,7 +115,7 @@ export const ImageUploader: React.FC = (): React.ReactElement => {
                 } ${
                     isDragging
                         ? 'border-white'
-                        : 'border-gray-600 hover:border-gray-400 transition-all duration-500'
+                        : 'border-gray-800 hover:border-gray-400 transition-all duration-500'
                 }`}
                 onDragOver={!isLoading ? handleDragOver : undefined}
                 onDragLeave={!isLoading ? handleDragLeave : undefined}
