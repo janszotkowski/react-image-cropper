@@ -1,10 +1,10 @@
 import { EditableFileName, ImageUploader, Socials } from '@/components';
 import * as React from 'react';
 import useImageStore from './store/imageStore';
-import { Download } from 'lucide-react';
+import { Download, Trash2 } from 'lucide-react';
 
 const App = (): React.ReactElement => {
-    const { selectedFile, customFileName, setCustomFileName, downloadImage } = useImageStore();
+    const { selectedFile, customFileName, setCustomFileName, downloadImage, reset } = useImageStore();
 
     return (
         <main className={'w-full h-screen flex flex-col items-center justify-center text-white'}>
@@ -21,19 +21,33 @@ const App = (): React.ReactElement => {
                             <p className={'text-gray-400 text-xs text-center mt-1'}>
                                 {`${(selectedFile.size / 1024).toFixed(1)} KB · ${selectedFile.type}`}
                             </p>
+                        </div>
+                    ) : (
+                        <h1 className={'text-2xl mb-6 text-center h-[48px]'}>Image Editor</h1>
+                    )
+                }
+                <ImageUploader />
+                {
+                    selectedFile ?
+                        <div className={'mt-3 flex gap-2'}>
                             <button
                                 onClick={downloadImage}
-                                className={'mt-3 flex items-center gap-2 text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded-md transition-colors cursor-pointer'}
+                                className={'flex items-center gap-2 text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded-md transition-colors cursor-pointer'}
                             >
                                 <Download size={16} />
                                 Download
                             </button>
+                            <button
+                                onClick={reset}
+                                className={'flex items-center gap-2 text-sm bg-red-500/10 hover:bg-red-500/20 px-3 py-1 rounded-md transition-colors cursor-pointer text-red-300'}
+                            >
+                                <Trash2 size={16} />
+                                Delete
+                            </button>
                         </div>
-                    ) : (
-                        <h1 className={'text-2xl mb-6 text-center'}>Image Editor</h1>
-                    )
+                        :
+                        <div className={'h-[28px] mt-3'} />
                 }
-                <ImageUploader />
             </div>
         </main>
     );
