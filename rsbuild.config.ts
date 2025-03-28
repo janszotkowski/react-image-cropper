@@ -8,6 +8,10 @@ export default defineConfig({
   server: {
     port: 8080
   },
+  dev: {
+    liveReload: false,
+		hmr: false
+  },
   html: {
     title: 'React Image Cropper'
   },
