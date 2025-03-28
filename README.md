@@ -1,67 +1,94 @@
+# 🖼️ Image Cropper
 
-# My App
+This is an open source project created as a learning tool and technology showcase. It serves as a platform for experimenting with modern web technologies and best practices in front-end development.
 
-This project was created using the `create-rts-kit` template. It includes a React, TypeScript, ESLint, Stylelint, and rsbuild setup out of the box.
+## ✨ What This Project Does
 
-## Getting Started
+Image Cropper is a React-based web application that provides an intuitive interface for image manipulation. Features include:
+
+- 📥 Drag & drop image upload with validation
+- 🎨 Canvas-based image display with interactive manipulation
+- 🔒 Image security validation and sanitization
+- 🔄 Image transformations (zoom, pan)
+- 💻 Modern UI with responsive design
+
+## 🛠️ Technology Stack
+
+This project demonstrates implementation of several modern technologies:
+
+- **React 19** - For building the user interface
+- **TypeScript** - For type-safe code
+- **Tailwind CSS** - For styling
+- **Zustand** - For state management
+- **RSBuild** - For optimized builds
+- **Canvas API** - For image manipulation
+- **React Toastify** - For notifications
+- **Lucide React** - For UI icons
+
+## 🚀 Getting Started
 
 To start the development server, install the dependencies and run the following commands:
 
 ### Installation:
 
+Using yarn:
 ```bash
 yarn install
 ```
 
+Using npm:
+```bash
+npm install
+```
+
+Using pnpm:
+```bash
+pnpm install
+```
+
 ### Running the development server:
 
+Using yarn:
 ```bash
 yarn dev
 ```
 
+Using npm:
+```bash
+npm run dev
+```
+
+Using pnpm:
+```bash
+pnpm dev
+```
+
 This will start the development server using `rsbuild`.
 
-## Project Structure
+## 📚 Learning Goals
 
-The project structure is as follows:
+This project serves as a showcase for:
 
-```
-src/
-├── App.css
-├── App.tsx
-├── index.tsx
-tsconfig.json
-eslint.config.mjs
-rsbuild.config.ts
-.stylelintrc.json
-package.json
-README.md
-```
+- Building performant image manipulation tools in the browser
+- Implementing secure file handling practices
+- Creating intuitive drag & drop interfaces
+- State management patterns with Zustand
+- Working with Canvas API for image processing
+- Building accessible UI components
 
-## Available Scripts
+## 📝 Available Scripts
 
 In the project, you can run:
 
 - `yarn dev` - Starts the development server.
+- `yarn build` - Creates a production build.
 - `yarn lint` - Lints your TypeScript files using ESLint.
 - `yarn lint:style` - Checks your styles using Stylelint.
 
-## TypeScript Configuration
+## 👥 Contributing
 
-The `tsconfig.json` file contains the configuration for TypeScript. You can modify it based on your needs. 
+This project is open for contributions. Feel free to experiment, improve, and learn from the codebase.
 
-## Linting
-
-- **ESLint** is configured for TypeScript and React code. The rules are set in `eslint.config.mjs`.
-- **Stylelint** is configured for linting CSS or styled components. You can adjust the rules in `.stylelintrc.json`.
-
-## Learn More
-
-- [React Documentation](https://reactjs.org/)
-- [TypeScript Documentation](https://www.typescriptlang.org/docs/)
-- [ESLint Documentation](https://eslint.org/docs/user-guide/getting-started)
-- [Stylelint Documentation](https://stylelint.io/)
-
-## License
+## ⚖️ License
 
 This project is licensed under the MIT License.
