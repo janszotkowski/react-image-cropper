@@ -1,0 +1,39 @@
+{
+  "name": "create-rts-setup",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "rsbuild dev --open",
+    "build": "rsbuild build",
+    "preview": "rsbuild preview",
+    "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
+    "lint:fix": "eslint 'src/**/*.{js,jsx,ts,tsx}' --fix",
+    "lint:styles": "stylelint 'src/**/*.{css,scss}'",
+    "lint:styles:fix": "stylelint 'src/**/*.{css,scss}' --fix"
+  },
+  "dependencies": {
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  },
+  "devDependencies": {
+    "@rsbuild/core": "1.2.19",
+    "@rsbuild/plugin-react": "1.1.1",
+    "@rsbuild/plugin-sass": "1.2.2",
+    "@stylistic/eslint-plugin": "4.2.0",
+    "@types/react": "19.0.12",
+    "@types/react-dom": "19.0.4",
+    "@typescript-eslint/eslint-plugin": "8.28.0",
+    "@typescript-eslint/parser": "8.28.0",
+    "eslint": "9.23.0",
+    "eslint-plugin-import": "2.31.0",
+    "eslint-plugin-interface-to-type": "1.0.2",
+    "eslint-plugin-jsx-a11y": "6.10.2",
+    "eslint-plugin-react": "7.37.4",
+    "eslint-plugin-react-hooks": "5.2.0",
+    "globals": "16.0.0",
+    "stylelint": "16.17.0",
+    "stylelint-config-standard-scss": "14.0.0",
+    "stylelint-scss": "6.11.1",
+    "typescript": "5.8.2"
+  }
+}
