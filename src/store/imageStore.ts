@@ -6,19 +6,22 @@ export type Position = {
 };
 
 export type ImageState = {
-    selectedImage: string | null;
-    selectedFile: File | null;
+    selectedImage: string | undefined;
+    selectedFile: File | undefined;
+    customFileName: string | undefined;
     isProcessing: boolean;
     position: Position;
     scale: number;
-    setSelectedImage: (image: string | null) => void;
-    setSelectedFile: (file: File | null) => void;
+    setSelectedImage: (image: string | undefined) => void;
+    setSelectedFile: (file: File | undefined) => void;
+    setCustomFileName: (name: string) => void;
     setProcessing: (isProcessing: boolean) => void;
     setPosition: (position: Position) => void;
     setScale: (scale: number) => void;
     checkFileType: (file: File) => boolean;
     checkFileSize: (file: File) => boolean;
     readFileAsDataURL: (file: File) => Promise<string>;
+    downloadImage: () => void;
     reset: () => void;
 };
 
@@ -35,15 +38,27 @@ const ALLOWED_IMAGE_TYPES = [
 // Maximum file size in bytes (5 MB)
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
-export const useImageStore = create<ImageState>((set) => ({
-    selectedImage: null,
-    selectedFile: null,
+export const useImageStore = create<ImageState>((set, get) => ({
+    selectedImage: undefined,
+    selectedFile: undefined,
+    customFileName: '',
     isProcessing: false,
     position: { x: 0, y: 0 },
     scale: 1,
     setSelectedImage: (image): void => set({ selectedImage: image }),
 
-    setSelectedFile: (file): void => set({ selectedFile: file }),
+    setSelectedFile: (file): void => {
+        if (file) {
+            set({
+                selectedFile: file,
+                customFileName: file.name,
+            });
+        } else {
+            set({ selectedFile: undefined });
+        }
+    },
+
+    setCustomFileName: (name): void => set({ customFileName: name }),
 
     setProcessing: (isProcessing): void => set({ isProcessing }),
 
@@ -73,9 +88,29 @@ export const useImageStore = create<ImageState>((set) => ({
         });
     },
 
+    downloadImage: (): void => {
+        const { selectedImage, customFileName, selectedFile } = get();
+        if (selectedImage && selectedFile) {
+            const link = document.createElement('a');
+            link.href = selectedImage;
+
+            // Get file extension from the original file
+            const extension = selectedFile.name.split('.').pop() || '';
+
+            // Add extension if the custom filename doesn't have it
+            const fileName = customFileName?.includes('.') ? customFileName : `${customFileName}.${extension}`;
+
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    },
+
     reset: (): void => set({
-        selectedImage: null,
-        selectedFile: null,
+        selectedImage: undefined,
+        selectedFile: undefined,
+        customFileName: undefined,
         position: { x: 0, y: 0 },
         scale: 1,
     }),

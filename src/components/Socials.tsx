@@ -12,7 +12,7 @@ const SOCIALS: { href: string; icon: React.ElementType; }[] = [
     },
 ] as const;
 
-export const Socials = (): React.ReactElement => (
+export const Socials: React.FC = (): React.ReactElement => (
     <div className={'flex absolute bottom-4 right-4 bg-black/50 rounded-full'}>
         {SOCIALS.map((social) => (
             <a

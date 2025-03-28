@@ -2,7 +2,7 @@ import { toast, ToastOptions } from 'react-toastify';
 
 class NotificationService {
     private defaultToastOptions: ToastOptions = {
-        position: 'top-center',
+        position: 'top-right',
         autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,

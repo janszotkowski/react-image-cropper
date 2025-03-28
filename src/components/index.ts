@@ -1,1 +1,3 @@
-export { Socials } from './Socials/Socials';
+export { Socials } from './Socials';
+export { EditableFileName } from './EditableFileName';
+export { ImageUploader } from './ImageUploader';

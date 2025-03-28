@@ -13,3 +13,7 @@ body {
     font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
     background-image: linear-gradient(to bottom, #020917, #000000);
 }
+
+h1, p {
+    user-select: none;
+}
