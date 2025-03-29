@@ -3,6 +3,7 @@ import { drawImage } from './DrawImage';
 import { ImageControls } from './ImageControls';
 import { useImageStore } from '@/store';
 import { ZoomSlider } from './ZoomSlider';
+import { RotationSlider } from './RotationSlider';
 import { drawCropOverlay, useCropInteraction, CropControls } from './CropOverlay';
 import { applyCropToImage, initializeDefaultCropArea } from './CropUtils';
 
@@ -218,14 +219,25 @@ export const ImageCanvas: React.FC = (): React.ReactElement => {
         }
     };
 
+    const handleRotationChange = (newRotation: number): void => {
+        rotate(newRotation - rotation);
+    };
+
     return (
         <div className={'w-full aspect-video'} style={{ maxWidth: '70vw', position: 'relative' }}>
             {
-                selectedImage && !isCropping &&
-                <ZoomSlider
-                    currentScale={scale}
-                    onScaleChange={setScale}
-                />
+                selectedImage && !isCropping && (
+                    <>
+                        <ZoomSlider
+                            currentScale={scale}
+                            onScaleChange={setScale}
+                        />
+                        <RotationSlider
+                            currentRotation={rotation}
+                            onRotationChange={handleRotationChange}
+                        />
+                    </>
+                )
             }
             <canvas
                 ref={canvasRef}
