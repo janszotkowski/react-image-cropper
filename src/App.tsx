@@ -12,7 +12,7 @@ const App = (): React.ReactElement => {
             <Socials />
             <motion.div
                 className={'w-[70%] h-full flex flex-col items-center justify-center'}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.2, delay: 0.3 }}
             >
