@@ -179,10 +179,12 @@ export const useImageStore = create<ImageState>((set, get) => ({
                 if (typeof result === 'string') {
                     resolve(result);
                 } else {
+                    notificationService.error('Failed to load file as Data URL.');
                     reject(new Error('Failed to load file as Data URL.'));
                 }
             };
             reader.onerror = (): void => {
+                notificationService.error('Error reading file.');
                 reject(new Error('Error reading file.'));
             };
             reader.readAsDataURL(file);
@@ -192,47 +194,49 @@ export const useImageStore = create<ImageState>((set, get) => ({
     downloadImage: (canvas: HTMLCanvasElement | null): void => {
         const { selectedFile, fileName } = get();
 
-        // If canvas is provided, get the current state of the image from canvas
-        if (canvas) {
-            try {
-                // Get file type from original file or default to png
-                const originalType = selectedFile?.type || 'image/png';
-                const dataUrl = canvas.toDataURL(originalType);
+        try {
+            let dataUrl: string | null = null;
+            let mimeType = selectedFile?.type ?? 'image/png';
 
-                // Create download link
-                const link = document.createElement('a');
-                link.href = dataUrl;
+            if (canvas) {
+                dataUrl = canvas.toDataURL(mimeType);
+            } else if (get().selectedImage) {
+                dataUrl = get().selectedImage as string;
 
-                // Get file extension from the original file
-                const extension = selectedFile?.name.split('.').pop() ?? 'png';
-
-                // Add extension if the custom filename doesn't have it
-                const fileNameWithExt = fileName?.includes('.') ? fileName : `${fileName}.${extension}`;
-
-                link.download = fileNameWithExt ?? 'image.png';
-
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            } catch (error) {
-                notificationService.error(`Error downloading image: ${error}`);
+                if (dataUrl.startsWith('data:')) {
+                    const typeMatch = dataUrl.match(/^data:(image\/[a-z0-9+.-]+);/i);
+                    if (typeMatch && typeMatch[1]) {
+                        mimeType = typeMatch[1];
+                    }
+                }
             }
-        } else if (get().selectedImage) {
-            // Fallback to original image if canvas not provided
+
+            if (!dataUrl) {
+                notificationService.error('No image data available');
+                return;
+            }
+
+            // Get file extension
+            const extension = mimeType.split('/')[1] ?? (selectedFile?.name.split('.').pop() ?? 'png');
+
+            // Add extension if needed
+            const fileNameWithExt = fileName?.includes('.') ? fileName : `${fileName ?? 'image'}.${extension}`;
+
+            // Create and setup download link
             const link = document.createElement('a');
-            link.href = get().selectedImage as string;
+            link.href = dataUrl;
+            link.download = fileNameWithExt;
+            link.setAttribute('download', fileNameWithExt);
 
-            // Get file extension from the original file
-            const extension = selectedFile?.name.split('.').pop() ?? 'png';
-
-            // Add extension if the custom filename doesn't have it
-            const fileNameWithExt = fileName?.includes('.') ? fileName : `${fileName}.${extension}`;
-
-            link.download = fileNameWithExt ?? 'image.png';
-
+            // Append to DOM, trigger download and clean up
             document.body.appendChild(link);
             link.click();
-            document.body.removeChild(link);
+
+            setTimeout(() => {
+                document.body.removeChild(link);
+            }, 100);
+        } catch (error) {
+            notificationService.error(`Error downloading image: ${error}`);
         }
     },
 
