@@ -29,7 +29,7 @@ const App = (): React.ReactElement => {
                             </p>
                         </div>
                     ) : (
-                        <h1 className={'text-2xl mb-6 text-center h-[48px]'}>Image Editor</h1>
+                        <h1 className={'text-2xl font-thin mb-6 text-center h-[48px]'}>Image Editor</h1>
                     )
                 }
                 <ImageUploader />
