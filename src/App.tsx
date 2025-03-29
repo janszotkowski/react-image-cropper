@@ -1,9 +1,8 @@
-import { EditableFileName, ImageUploader, Socials } from '@/components';
+import { EditableFileName, ImageCanvas, ImageUploader, Socials } from '@/components';
 import * as React from 'react';
 import useImageStore from './store/imageStore';
 import { Download, Trash2 } from 'lucide-react';
 import { motion } from 'motion/react';
-import ImageCanvas from './components/ImageCanvas';
 
 const App: React.FC = (): React.ReactElement => {
     const { selectedFile, fileName, downloadImageX, reset } = useImageStore();
