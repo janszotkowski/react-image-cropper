@@ -1,8 +1,21 @@
 import * as React from 'react';
-import { useImageStore } from '@/store';
+import useImageStore from '../store/imageStore';
+import { FlipHorizontal, RotateCcw, RotateCw, FlipVertical } from 'lucide-react';
 
 export const ImageCanvas: React.FC = (): React.ReactElement => {
-    const { selectedImage, position, scale, setPosition } = useImageStore();
+    const {
+        selectedImage,
+        position,
+        scale,
+        isFlippedHorizontally,
+        isFlippedVertically,
+        rotation,
+        setPosition,
+        flipHorizontally,
+        flipVertically,
+        rotate,
+    } = useImageStore();
+
     const canvasRef = React.useRef<HTMLCanvasElement>(null);
     const [isDragging, setIsDragging] = React.useState(false);
     const [startDragPosition, setStartDragPosition] = React.useState({ x: 0, y: 0 });
@@ -22,7 +35,7 @@ export const ImageCanvas: React.FC = (): React.ReactElement => {
         };
     }, [selectedImage]);
 
-    // Render image on canvas when image, position or scale changes
+    // Render image on canvas when image, position, scale or transformations change
     React.useEffect(() => {
         if (!canvasRef.current || !image) return;
 
@@ -55,9 +68,25 @@ export const ImageCanvas: React.FC = (): React.ReactElement => {
 
         // Apply transformations
         ctx.save();
+
+        // Move to center, apply transforms, then move back
         ctx.translate(canvas.width / 2, canvas.height / 2);
+
+        // Apply position offset
         ctx.translate(position.x, position.y);
-        ctx.scale(scale, scale);
+
+        // Apply rotation
+        if (rotation !== 0) {
+            ctx.rotate((rotation * Math.PI) / 180);
+        }
+
+        // Apply scale
+        ctx.scale(
+            scale * (isFlippedHorizontally ? -1 : 1),
+            scale * (isFlippedVertically ? -1 : 1),
+        );
+
+        // Move back
         ctx.translate(-canvas.width / 2, -canvas.height / 2);
 
         // Draw image
@@ -70,7 +99,7 @@ export const ImageCanvas: React.FC = (): React.ReactElement => {
         );
 
         ctx.restore();
-    }, [image, position, scale]);
+    }, [image, position, scale, isFlippedHorizontally, isFlippedVertically, rotation]);
 
     // Update canvas size when window size changes
     React.useEffect(() => {
@@ -84,7 +113,7 @@ export const ImageCanvas: React.FC = (): React.ReactElement => {
             canvas.width = container.clientWidth;
             canvas.height = container.clientHeight;
 
-            // Redraw after resize
+            // Force redraw after resize
             if (image) {
                 const ctx = canvas.getContext('2d');
                 if (!ctx) return;
@@ -109,9 +138,25 @@ export const ImageCanvas: React.FC = (): React.ReactElement => {
                 }
 
                 ctx.save();
+
+                // Move to center, apply transforms, then move back
                 ctx.translate(canvas.width / 2, canvas.height / 2);
+
+                // Apply position offset
                 ctx.translate(position.x, position.y);
-                ctx.scale(scale, scale);
+
+                // Apply rotation
+                if (rotation !== 0) {
+                    ctx.rotate((rotation * Math.PI) / 180);
+                }
+
+                // Apply scale with flip
+                ctx.scale(
+                    scale * (isFlippedHorizontally ? -1 : 1),
+                    scale * (isFlippedVertically ? -1 : 1),
+                );
+
+                // Move back
                 ctx.translate(-canvas.width / 2, -canvas.height / 2);
 
                 ctx.drawImage(
@@ -132,7 +177,7 @@ export const ImageCanvas: React.FC = (): React.ReactElement => {
         return (): void => {
             window.removeEventListener('resize', updateCanvasSize);
         };
-    }, [image, position, scale]);
+    }, [image, position, scale, isFlippedHorizontally, isFlippedVertically, rotation]);
 
     const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>): void => {
         if (!selectedImage) return;
@@ -167,6 +212,47 @@ export const ImageCanvas: React.FC = (): React.ReactElement => {
                 onMouseUp={handleMouseUp}
                 onMouseLeave={handleMouseUp}
             />
+
+            {selectedImage && (
+                <div className={'absolute left-3 top-1/2 transform -translate-y-1/2 flex flex-col gap-2'}>
+                    <button
+                        onClick={flipHorizontally}
+                        className={'w-9 h-9 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white transition-colors cursor-pointer'}
+                        title={'Flip Horizontally'}
+                    >
+                        <FlipHorizontal size={18} />
+                    </button>
+                    <button
+                        onClick={flipVertically}
+                        className={'w-9 h-9 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white transition-colors cursor-pointer'}
+                        title={'Flip Vertically'}
+                    >
+                        <FlipVertical size={18} />
+                    </button>
+                    <button
+                        onClick={() => rotate(90)}
+                        className={'w-9 h-9 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white transition-colors cursor-pointer'}
+                        title={'Rotate Clockwise'}
+                    >
+                        <RotateCw size={18} />
+                    </button>
+                    <button
+                        onClick={() => rotate(-90)}
+                        className={'w-9 h-9 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white transition-colors cursor-pointer'}
+                        title={'Rotate Counter-Clockwise'}
+                    >
+                        <RotateCcw size={18} />
+                    </button>
+                </div>
+            )}
+
+            {!selectedImage && (
+                <div className={'absolute inset-0 flex items-center justify-center text-white/50 text-sm'}>
+                    No image selected
+                </div>
+            )}
         </div>
     );
 };
+
+export default ImageCanvas;

@@ -1,11 +1,25 @@
-import { EditableFileName, ImageCanvas, ImageUploader, Socials } from '@/components';
+import { EditableFileName, ImageUploader, Socials } from '@/components';
 import * as React from 'react';
+import useImageStore from './store/imageStore';
 import { Download, Trash2 } from 'lucide-react';
 import { motion } from 'motion/react';
-import { useImageStore } from '@/store';
+import ImageCanvas from './components/ImageCanvas';
 
-const App = (): React.ReactElement => {
-    const { selectedFile, customFileName, setCustomFileName, downloadImage, reset } = useImageStore();
+const App: React.FC = (): React.ReactElement => {
+    const { selectedFile, fileName, downloadImageX, reset } = useImageStore();
+    const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
+
+    React.useEffect(() => {
+        if (selectedFile) {
+            canvasRef.current = document.querySelector('canvas');
+        }
+    }, [selectedFile]);
+
+    const handleDownload = (): void => {
+        if (canvasRef.current) {
+            downloadImageX(canvasRef.current);
+        }
+    };
 
     return (
         <main className={'w-full h-screen flex flex-col items-center justify-center text-white'}>
@@ -20,8 +34,8 @@ const App = (): React.ReactElement => {
                     selectedFile ? (
                         <div className={'mb-4 flex flex-col items-center'}>
                             <EditableFileName
-                                fileName={customFileName || selectedFile.name}
-                                onChange={setCustomFileName}
+                                fileName={fileName ?? selectedFile.name}
+                                onChange={(name) => useImageStore.getState().setFileName(name)}
                                 className={'mb-1'}
                             />
                             <p className={'text-gray-400 text-xs text-center mt-1'}>
@@ -39,7 +53,7 @@ const App = (): React.ReactElement => {
                     selectedFile ?
                         <div className={'mt-3 flex gap-2'}>
                             <button
-                                onClick={downloadImage}
+                                onClick={handleDownload}
                                 className={'flex items-center gap-2 text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded-md transition-colors cursor-pointer'}
                             >
                                 <Download size={16} />
