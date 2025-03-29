@@ -9,7 +9,7 @@ type ImageControlsProps = {
 };
 
 export const ImageControls: React.FC<ImageControlsProps> = (props: ImageControlsProps): React.ReactElement => (
-    <div className={'absolute left-3 top-1/2 transform -translate-y-1/2 flex flex-col gap-2'}>
+    <div className={'absolute -left-10 top-1/2 transform -translate-y-1/2 flex flex-col gap-2'}>
         <ControlButton
             onClick={props.onFlipHorizontal}
             title={'Flip Horizontally'}

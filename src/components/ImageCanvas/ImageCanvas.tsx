@@ -2,6 +2,7 @@ import * as React from 'react';
 import { drawImage } from './DrawImage';
 import { ImageControls } from './ImageControls';
 import { useImageStore } from '@/store';
+import { ZoomSlider } from './ZoomSlider';
 
 export const ImageCanvas: React.FC = (): React.ReactElement => {
     const {
@@ -14,6 +15,7 @@ export const ImageCanvas: React.FC = (): React.ReactElement => {
         setPosition,
         flipHorizontally,
         flipVertically,
+        setScale,
         rotate,
     } = useImageStore();
 
@@ -119,6 +121,13 @@ export const ImageCanvas: React.FC = (): React.ReactElement => {
 
     return (
         <div className={'w-full aspect-video'} style={{ maxWidth: '70vw', position: 'relative' }}>
+            {
+                selectedImage &&
+                <ZoomSlider
+                    currentScale={scale}
+                    onScaleChange={setScale}
+                />
+            }
             <canvas
                 ref={canvasRef}
                 className={'w-full h-full bg-black/20 rounded-lg'}
@@ -128,12 +137,15 @@ export const ImageCanvas: React.FC = (): React.ReactElement => {
                 onMouseLeave={handleMouseUp}
             />
 
-            {selectedImage && <ImageControls
-                onFlipHorizontal={flipHorizontally}
-                onFlipVertical={flipVertically}
-                onRotateClockwise={() => rotate(90)}
-                onRotateCounterClockwise={() => rotate(-90)}
-            />}
+            {
+                selectedImage &&
+                <ImageControls
+                    onFlipHorizontal={flipHorizontally}
+                    onFlipVertical={flipVertically}
+                    onRotateClockwise={() => rotate(90)}
+                    onRotateCounterClockwise={() => rotate(-90)}
+                />
+            }
         </div>
     );
 };
