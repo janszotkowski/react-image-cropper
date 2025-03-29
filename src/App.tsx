@@ -2,6 +2,7 @@ import { EditableFileName, ImageUploader, Socials } from '@/components';
 import * as React from 'react';
 import useImageStore from './store/imageStore';
 import { Download, Trash2 } from 'lucide-react';
+import { motion } from 'motion/react';
 
 const App = (): React.ReactElement => {
     const { selectedFile, customFileName, setCustomFileName, downloadImage, reset } = useImageStore();
@@ -9,7 +10,12 @@ const App = (): React.ReactElement => {
     return (
         <main className={'w-full h-screen flex flex-col items-center justify-center text-white'}>
             <Socials />
-            <div className={'w-[70%] h-full flex flex-col items-center justify-center'}>
+            <motion.div
+                className={'w-[70%] h-full flex flex-col items-center justify-center'}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1.2, delay: 0.3 }}
+            >
                 {
                     selectedFile ? (
                         <div className={'mb-4 flex flex-col items-center'}>
@@ -48,7 +54,7 @@ const App = (): React.ReactElement => {
                         :
                         <div className={'h-[28px] mt-3'} />
                 }
-            </div>
+            </motion.div>
         </main>
     );
 };
