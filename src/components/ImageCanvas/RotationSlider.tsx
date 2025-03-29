@@ -8,7 +8,7 @@ type RotationSliderProps = {
 
 // Rotation limits: 0 to 360 degrees
 const MIN_ROTATION = 0;
-const MAX_ROTATION = 360;
+const MAX_ROTATION = 359;
 
 export const RotationSlider: React.FC<RotationSliderProps> = (props: RotationSliderProps): React.ReactElement => {
     const [isDragging, setIsDragging] = React.useState(false);
@@ -19,7 +19,7 @@ export const RotationSlider: React.FC<RotationSliderProps> = (props: RotationSli
         // Convert from rotation (0 to 360) to position (0 to 100%)
         const range = MAX_ROTATION - MIN_ROTATION;
         const normalizedRotation = (props.currentRotation - MIN_ROTATION) / range;
-        return normalizedRotation * 100;
+        return 100 - (normalizedRotation * 100);
     }, [props.currentRotation]);
 
     // Direct interpretation of mouse position on the slider
@@ -35,7 +35,7 @@ export const RotationSlider: React.FC<RotationSliderProps> = (props: RotationSli
 
         // Convert percentage value to rotation (0-360)
         const range = MAX_ROTATION - MIN_ROTATION;
-        const newRotation = (percentPosition / 100) * range;
+        const newRotation = MAX_ROTATION - (percentPosition / 100) * range;
 
         props.onRotationChange(newRotation);
     }, [props]);
@@ -106,7 +106,7 @@ export const RotationSlider: React.FC<RotationSliderProps> = (props: RotationSli
                 <div className={'absolute h-full w-full rounded-full overflow-hidden'}>
                     <div
                         className={'absolute bottom-0 left-0 right-0 bg-black/40'}
-                        style={{ height: `${getSliderPosition()}%` }}
+                        style={{ height: `${100 - getSliderPosition()}%` }}
                     />
                 </div>
 
