@@ -241,7 +241,7 @@ export const ImageCanvas: React.FC = (): React.ReactElement => {
             }
             <canvas
                 ref={canvasRef}
-                className={'w-full h-full bg-black/20 rounded-lg'}
+                className={'w-full h-full bg-black/20 rounded-lg border-1 border-white/10'}
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
