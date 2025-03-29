@@ -5,6 +5,14 @@ export type Position = {
     y: number;
 };
 
+export type CropArea = {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    active: boolean;
+};
+
 export type ImageState = {
     selectedImage: string | undefined;
     selectedFile: File | undefined;
@@ -15,6 +23,8 @@ export type ImageState = {
     isFlippedHorizontally: boolean;
     isFlippedVertically: boolean;
     rotation: number;
+    cropArea: CropArea;
+    isCropping: boolean;
     setSelectedImage: (image: string | undefined) => void;
     setSelectedFile: (file: File | undefined) => void;
     setFileName: (name: string) => void;
@@ -24,6 +34,10 @@ export type ImageState = {
     flipHorizontally: () => void;
     flipVertically: () => void;
     rotate: (degrees: number) => void;
+    toggleCropMode: () => void;
+    setCropArea: (area: Partial<CropArea>) => void;
+    resetCropArea: () => void;
+    applyCrop: (canvas: HTMLCanvasElement, area?: CropArea) => Promise<void>;
     checkFileType: (file: File) => boolean;
     checkFileSize: (file: File) => boolean;
     readFileAsDataURL: (file: File) => Promise<string>;
@@ -55,6 +69,8 @@ export const useImageStore = create<ImageState>((set, get) => ({
     isFlippedHorizontally: false,
     isFlippedVertically: false,
     rotation: 0,
+    cropArea: { x: 0, y: 0, width: 0, height: 0, active: false },
+    isCropping: false,
     setSelectedImage: (image): void => set({ selectedImage: image }),
 
     setSelectedFile: (file): void => {
@@ -81,6 +97,75 @@ export const useImageStore = create<ImageState>((set, get) => ({
     flipVertically: (): void => set((state) => ({ isFlippedVertically: !state.isFlippedVertically })),
 
     rotate: (degrees): void => set((state) => ({ rotation: (state.rotation + degrees) % 360 })),
+
+    toggleCropMode: (): void => set((state) => {
+        // If we're exiting crop mode, reset the crop area
+        if (state.isCropping) {
+            return {
+                isCropping: false,
+                cropArea: { ...state.cropArea, active: false },
+            };
+        }
+        return { isCropping: true };
+    }),
+
+    setCropArea: (area): void => set((state) => ({
+        cropArea: { ...state.cropArea, ...area },
+    })),
+
+    resetCropArea: (): void => set({
+        cropArea: { x: 0, y: 0, width: 0, height: 0, active: false },
+    }),
+
+    applyCrop: async (canvas, area): Promise<void> => {
+        const { cropArea: storeCropArea, selectedFile, setSelectedImage, setProcessing } = get();
+
+        // Use provided area or fallback to store's cropArea
+        const cropArea = area || storeCropArea;
+
+        // Check if crop area is active
+        if (!cropArea.active || !canvas) return;
+
+        try {
+            setProcessing(true);
+
+            // Create a new canvas for the cropped area
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d');
+            if (!tempCtx) throw new Error('Could not get 2D context');
+
+            // Set the size of the new canvas
+            tempCanvas.width = cropArea.width;
+            tempCanvas.height = cropArea.height;
+
+            // Copy the cropped area to the new canvas
+            tempCtx.drawImage(
+                canvas,
+                cropArea.x, cropArea.y, cropArea.width, cropArea.height,
+                0, 0, cropArea.width, cropArea.height,
+            );
+
+            // Convert to Data URL
+            const originalType = selectedFile?.type || 'image/png';
+            const croppedImageDataUrl = tempCanvas.toDataURL(originalType);
+
+            // Update the image
+            setSelectedImage(croppedImageDataUrl);
+
+            // Reset transformations
+            set({
+                position: { x: 0, y: 0 },
+                scale: 1,
+                isFlippedHorizontally: false,
+                isFlippedVertically: false,
+                rotation: 0,
+            });
+        } catch (error) {
+            console.error('Error applying crop:', error);
+        } finally {
+            setProcessing(false);
+        }
+    },
 
     checkFileType: (file): boolean => ALLOWED_IMAGE_TYPES.includes(file.type),
 
@@ -155,6 +240,8 @@ export const useImageStore = create<ImageState>((set, get) => ({
         isFlippedHorizontally: false,
         isFlippedVertically: false,
         rotation: 0,
+        cropArea: { x: 0, y: 0, width: 0, height: 0, active: false },
+        isCropping: false,
     }),
 }));
 
