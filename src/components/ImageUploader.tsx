@@ -1,8 +1,8 @@
 import React, { useRef, useCallback } from 'react';
 import { Upload } from 'lucide-react';
-import useImageSafety from '../hooks/useImageSafety';
-import { notificationService } from '../service/NotificationService';
-import useImageStore from '../store/imageStore';
+import { useImageStore } from '@/store';
+import { useImageSafety } from '@/hooks';
+import { notificationService } from '@/service';
 
 export const ImageUploader: React.FC = (): React.ReactElement => {
     const [isDragging, setIsDragging] = React.useState<boolean>(false);
@@ -110,12 +110,10 @@ export const ImageUploader: React.FC = (): React.ReactElement => {
 
             {/* Drop zone */}
             <div
-                className={`w-full h-full p-8 border-1 rounded-lg flex flex-col items-center justify-center ${
-                    isLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-                } ${
-                    isDragging
-                        ? 'border-white'
-                        : 'border-gray-800 hover:border-gray-400 transition-all duration-500'
+                className={`w-full h-full p-8 border-1 rounded-lg flex flex-col items-center justify-center ${isLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                } ${isDragging
+                    ? 'border-white'
+                    : 'border-gray-800 hover:border-gray-400 transition-all duration-500'
                 }`}
                 onDragOver={!isLoading ? handleDragOver : undefined}
                 onDragLeave={!isLoading ? handleDragLeave : undefined}

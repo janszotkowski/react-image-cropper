@@ -1,8 +1,8 @@
-import { EditableFileName, ImageUploader, Socials } from '@/components';
+import { EditableFileName, ImageCanvas, ImageUploader, Socials } from '@/components';
 import * as React from 'react';
-import useImageStore from './store/imageStore';
 import { Download, Trash2 } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useImageStore } from '@/store';
 
 const App = (): React.ReactElement => {
     const { selectedFile, customFileName, setCustomFileName, downloadImage, reset } = useImageStore();
@@ -32,7 +32,9 @@ const App = (): React.ReactElement => {
                         <h1 className={'text-2xl font-thin mb-6 text-center h-[48px]'}>Image Editor</h1>
                     )
                 }
-                <ImageUploader />
+
+                {selectedFile ? <ImageCanvas /> : <ImageUploader />}
+
                 {
                     selectedFile ?
                         <div className={'mt-3 flex gap-2'}>
