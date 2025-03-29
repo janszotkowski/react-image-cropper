@@ -5,7 +5,7 @@ import { Download, Trash2 } from 'lucide-react';
 import { motion } from 'motion/react';
 
 const App: React.FC = (): React.ReactElement => {
-    const { selectedFile, fileName, downloadImageX, reset } = useImageStore();
+    const { selectedFile, fileName, downloadImage, reset } = useImageStore();
     const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
 
     React.useEffect(() => {
@@ -16,7 +16,7 @@ const App: React.FC = (): React.ReactElement => {
 
     const handleDownload = (): void => {
         if (canvasRef.current) {
-            downloadImageX(canvasRef.current);
+            downloadImage(canvasRef.current);
         }
     };
 

@@ -1,3 +1,4 @@
+import { notificationService } from '@/service';
 import { create } from 'zustand';
 
 export type Position = {
@@ -41,8 +42,7 @@ export type ImageState = {
     checkFileType: (file: File) => boolean;
     checkFileSize: (file: File) => boolean;
     readFileAsDataURL: (file: File) => Promise<string>;
-    downloadImageX: (canvas: HTMLCanvasElement | null) => void;
-    downloadImage: (link: HTMLAnchorElement) => void;
+    downloadImage: (canvas: HTMLCanvasElement | null) => void;
     reset: () => void;
 };
 
@@ -189,8 +189,8 @@ export const useImageStore = create<ImageState>((set, get) => ({
         });
     },
 
-    downloadImageX: (canvas: HTMLCanvasElement | null): void => {
-        const { selectedFile } = get();
+    downloadImage: (canvas: HTMLCanvasElement | null): void => {
+        const { selectedFile, fileName } = get();
 
         // If canvas is provided, get the current state of the image from canvas
         if (canvas) {
@@ -203,32 +203,37 @@ export const useImageStore = create<ImageState>((set, get) => ({
                 const link = document.createElement('a');
                 link.href = dataUrl;
 
-                get().downloadImage(link);
+                // Get file extension from the original file
+                const extension = selectedFile?.name.split('.').pop() ?? 'png';
+
+                // Add extension if the custom filename doesn't have it
+                const fileNameWithExt = fileName?.includes('.') ? fileName : `${fileName}.${extension}`;
+
+                link.download = fileNameWithExt ?? 'image.png';
+
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             } catch (error) {
-                console.error('Error downloading image:', error);
+                notificationService.error(`Error downloading image: ${error}`);
             }
         } else if (get().selectedImage) {
             // Fallback to original image if canvas not provided
             const link = document.createElement('a');
             link.href = get().selectedImage as string;
 
-            get().downloadImage(link);
+            // Get file extension from the original file
+            const extension = selectedFile?.name.split('.').pop() ?? 'png';
+
+            // Add extension if the custom filename doesn't have it
+            const fileNameWithExt = fileName?.includes('.') ? fileName : `${fileName}.${extension}`;
+
+            link.download = fileNameWithExt ?? 'image.png';
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
-    },
-
-    downloadImage: (link: HTMLAnchorElement): void => {
-        const { fileName, selectedFile } = get();
-
-        // Get file extension from the original file
-        const extension = selectedFile?.name.split('.').pop() ?? '';
-
-        // Add extension if the custom filename doesn't have it
-        const fileNameWithExt = fileName?.includes('.') ? fileName : `${fileName}.${extension}`;
-
-        link.download = fileNameWithExt ?? 'image.png';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
     },
 
     reset: (): void => set({

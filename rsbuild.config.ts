@@ -13,7 +13,7 @@ export default defineConfig({
 		hmr: false
   },
   html: {
-    title: 'React Image Cropper'
+    title: 'Image Editor'
   },
   source: {
     alias: {
