@@ -22,7 +22,7 @@
   "devDependencies": {
     "@rsbuild/core": "1.2.19",
     "@rsbuild/plugin-react": "1.4.5",
-    "@rsbuild/plugin-sass": "1.2.2",
+    "@rsbuild/plugin-sass": "1.5.0",
     "@stylistic/eslint-plugin": "4.4.1",
     "@tailwindcss/postcss": "4.0.17",
     "@types/node": "22.13.14",
