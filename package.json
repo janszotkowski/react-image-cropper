@@ -23,7 +23,7 @@
     "@rsbuild/core": "1.2.19",
     "@rsbuild/plugin-react": "1.4.5",
     "@rsbuild/plugin-sass": "1.2.2",
-    "@stylistic/eslint-plugin": "4.4.1",
+    "@stylistic/eslint-plugin": "5.8.0",
     "@tailwindcss/postcss": "4.0.17",
     "@types/node": "22.13.14",
     "@types/react": "19.0.12",
