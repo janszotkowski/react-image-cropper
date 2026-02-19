@@ -12,7 +12,7 @@
     "lint:styles:fix": "stylelint 'src/**/*.{css,scss}' --fix"
   },
   "dependencies": {
-    "lucide-react": "0.484.0",
+    "lucide-react": "0.575.0",
     "motion": "12.6.2",
     "react": "19.0.0",
     "react-dom": "19.0.0",
