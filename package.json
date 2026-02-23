@@ -30,7 +30,7 @@
     "@types/react-dom": "19.0.4",
     "@typescript-eslint/eslint-plugin": "8.28.0",
     "@typescript-eslint/parser": "8.28.0",
-    "eslint": "9.23.0",
+    "eslint": "10.0.2",
     "eslint-plugin-import": "2.32.0",
     "eslint-plugin-interface-to-type": "1.1.0",
     "eslint-plugin-jsx-a11y": "6.10.2",
